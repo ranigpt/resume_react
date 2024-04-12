@@ -9,18 +9,38 @@ import { slideupDown,FadeinOutOpacity } from "../animations";
 import {auth } from "../config/firebaseconfig"
 import {useQueryClient} from "react-query";
 import { adminIds } from "../utils/helper";
+import useFilters from '../hooks/useFilters';
 
 
 const Header =()=>{
 
   const {data , isLoading , isError} = useUser();
   const [isMenu , setIsMenu]= useState(false);
- const queryClient = useQueryClient()
+ const queryClient = useQueryClient();
+
+  const {data : filterData }=useFilters();
+
+
+
   const signOutUser = async()=>{
     await auth.signOut().then (()=>{
       queryClient.setQueryData("user",null);
     });
   };
+
+  const handleSearchTerm =(e)=>{
+    queryClient.setQueryData("globalFilter" ,
+    {...queryClient.getQueryData("globalFilter"),
+    searchTerm :e.target.value,
+});
+  }
+
+  const clearFilter =()=>{
+    queryClient.setQueryData("globalFilter" ,
+    {...queryClient.getQueryData("globalFilter"),
+    searchTerm :""
+    });
+  }
     return(
        <header className="w-full flex items-center justify-center px-4 py-3 lg:px-8 border-b  border-gray-400 bg-bg-Primary z-50 gap-12 sticky top-6">
 
@@ -29,7 +49,22 @@ const Header =()=>{
         </Link>
 
 <div className="flex-1 border border-gray-300 px-4 py-1 rounded-b-md flex items-center justify-between bg-gray-300" >
-    <input type ="text" placeholder="Search items......" className="flex-1 h-10 bg-transparent text-base font-semibold outline-none border-none"/>
+    <input 
+     value={filterData?.searchTerm ? filterData?.searchTerm : ""}
+     onChange={handleSearchTerm}
+    type ="text" placeholder="Search items......" className="flex-1 h-10 bg-transparent text-base font-semibold outline-none border-none"/>
+
+    <AnimatePresence>
+   
+    {filterData?.searchTerm.length > 0 && (
+      <motion.div 
+      onClick={clearFilter}
+      {...FadeinOutOpacity} className="w-8 h-8 flext items-center   justify-center bg-gray-400 cursor-pointer active:scale-95 duration-150 rounded-md ">
+        <p className="text-2xl text-black">x</p>
+
+        </motion.div>
+    )}
+    </AnimatePresence>
 </div>
 
 <AnimatePresence>
@@ -80,7 +115,7 @@ const Header =()=>{
   {/* menus items */}
 
   <div className="w-full flex flex-col gap-8 items-start pt-6">
-    <Link className=" text-txtLight hover:text-txtDark text-base whitespace-nowrap" to={"/profile"}>My Account</Link>
+    <Link className=" text-txtLight hover:text-txtDark text-base whitespace-nowrap" to={`/profile/${data?.uid}`}>My Account</Link>
    {
     adminIds.includes(data?.uid) && (
       <Link className=" text-txtLight hover:text-txtDark text-base whitespace-nowrap" to={"/template/create"}>Add new Template</Link>

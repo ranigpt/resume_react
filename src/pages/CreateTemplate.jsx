@@ -137,8 +137,8 @@ const pushtoCloud =async()=>{
    imageURL :imageAsset.uri,
    tags : selectedtags,
    name :templates && templates.length>0 ? 
-    `Templates${templates.lenght+1}`:
-    "Templates 1",
+    `Template${templates.length+1}`:
+    "Template1",
    timestamp : timestamp,
   };
   
@@ -188,8 +188,8 @@ useEffect (()=>{
             <div className="w-full flex items-center justify-end py-4 ">
                 <p className="text-base text-txtLight uppercase font-semibold">TempID:{""}</p>
                 <p className="text-sm text-txtDark capitalize font-bold">{templates && templates.length>0 ? 
-                `Templates${templates.length+1}`:
-                "Templates 1"}</p>
+                `Template${templates.length+1}`:
+                "Template1"}</p>
           </div>
 
           <input   className="w-full px-4 py-3 rounded-md bg-transparent border border-gray-300 text-lg text-gray-700 focus:text-gray-900 focus:shadow-md outline-none"
