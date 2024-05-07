@@ -90,23 +90,22 @@ const navigate = useNavigate();
   
 
 
- const deleteobject = async ()=>{
+ const deleteAnImagebject= async ()=>{
   setInterval(()=>{
     setImageAsset((prevAsset)=>({...prevAsset,
      progress :0,
      uri : null,
-     isImageLoading:false,
+     
     }));
 
  }, 2000);
 
- setImageAsset((prevAsset)=>({...prevAsset , isImageLoading : true}));
-    const deleteRef = ref(storage , imageAsset.uri);
+ const deleteRef = ref(storage , imageAsset.uri);
     deleteObject(deleteRef).then(()=>{
       
-      toast.success("image remove");
+      toast.success("image removed");
      
-    })
+    });
  };
 
 
@@ -155,7 +154,7 @@ await setDoc(doc(db,"templates" ,id), _doc).then(()=>{
 })
 };
 
-const RemoveTamplet=async (template)=>{
+const removeTamplet=async (template)=>{
  const deleteRef = ref(storage ,template?.imageURL);
  await deleteObject(deleteRef).then(async()=>{
   await deleteDoc(doc(db , "templates" , template?._id)).then(()=>{
@@ -232,8 +231,8 @@ useEffect (()=>{
 
             {/* delete action */}
 
-            <div className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-red-400 cursor-pointer" onClick={deleteobject}>
-              <FaTrash className="text-sm text-white0"/>
+            <div className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-red-400 cursor-pointer" onClick={deleteAnImagebject}>
+              <FaTrash className="text-sm text-white"/>
             </div>
         </div>
       </React.Fragment>
@@ -284,8 +283,8 @@ useEffect (()=>{
               <img src={template?.imageURL} alt="templetimg" className="w-full h-full object-cover"/>
 
               <div className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-red-400 cursor-pointer" 
-              onClick={RemoveTamplet}>
-              <FaTrash className="text-sm text-white0"/>
+              onClick={()=>removeTamplet(template)}>
+              <FaTrash className="text-sm text-white"/>
             </div>
             </div>
           ))}
